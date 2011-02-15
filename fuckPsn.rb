@@ -11,11 +11,12 @@
 require 'socket'
 require 'openssl'
 
-$remoteHost = "199.108.4.73"
+require 'rubydns'
 
+$remoteHost = "199.108.4.73"
 $remotePort = 443
 
-puts "fuckPSN v0.3 by drizzt <drizzt@ibeglab.org>"
+puts "fuckPSN v0.4 by drizzt <drizzt@ibeglab.org>"
 puts "target address: #{$remoteHost}:#{$remotePort}"
 
 localHost = "0.0.0.0"
@@ -101,6 +102,10 @@ key = OpenSSL::PKey::RSA.new(key_str)  #(File::read(key_file))
 server = TCPServer.new(localHost, localPort)
 webServer = TCPServer.new(localHost, 80)
 
+dnsSocket = UDPSocket.new(Socket::AF_INET)
+dnsSocket.bind(localHost, 53)
+R =  Resolv::DNS.new
+
 port = server.addr[1]
 addrs = server.addr[2..-1].uniq
 
@@ -111,6 +116,12 @@ addrs = webServer.addr[2..-1].uniq
 
 puts "*** HTTP listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
 
+port = dnsSocket.addr[1]
+addrs = dnsSocket.addr[2..-1].uniq
+
+puts "*** DNS listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
+
+
 # abort on exceptions, otherwise threads will be silently killed in case
 # of unhandled exceptions
 #Thread.abort_on_exception = true
@@ -118,6 +129,32 @@ puts "*** HTTP listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
 # have a thread just to process Ctrl-C events on Windows
 # (although Ctrl-Break always works)
 #Thread.new { loop { sleep 1 } }
+
+def dnsConnThread(local)
+	packet, sender = local.recvfrom(1024*5)
+	myIp = UDPSocket.open {|s| s.connect(sender.last, 1); s.addr.last }
+	RubyDNS::Server.new do |server|
+		server.logger.level = Logger::INFO
+		Thread.new do
+			match("auth.np.ac.playstation.net", :A) do |transaction|
+				logger.info("#{transaction} query received, returning #{myIp}")
+				transaction.respond!(myIp)
+			end
+
+			match(/ps3.update.playstation.net$/, :A) do |match_data, transaction|
+				logger.info("#{transaction} query received, returning #{myIp}")
+				transaction.respond!(myIp)
+			end
+
+			otherwise do |transaction|
+				transaction.passthrough!(R)
+			end
+
+			result = server.receive_data(packet)
+			local.send(result, 0, sender[2], sender[1])
+		end
+	end
+end
 
 def connThread(local)
 	port, name = local.peeraddr[1..2]
@@ -186,12 +223,15 @@ if not defined?(Ocra)
 	loop do
 		# whenever server.accept returns a new connection, start
 		# a handler thread for that connection
-		ready = select([server,webServer], nil, nil)
+		ready = select([server, webServer, dnsSocket], nil, nil)
 		if ready[0].include? server
 			Thread.start(server.accept) { |local| sslConnThread(local) }
 		end
 		if ready[0].include? webServer
 			Thread.start(webServer.accept) { |local| connThread(local) }
+		end
+		if ready[0].include? dnsSocket
+			Thread.start(dnsSocket) { |local| dnsConnThread(local) }
 		end
 	end
 end
