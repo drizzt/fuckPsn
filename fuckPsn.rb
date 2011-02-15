@@ -8,6 +8,8 @@
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
 
+require 'rubygems'
+
 require 'socket'
 require 'openssl'
 
@@ -16,6 +18,7 @@ require 'rubydns'
 # Ocra is the .exe generator
 defined?(Ocra) and exit
 
+# Enter in current directory
 Dir.chdir File.dirname($0)
 
 # Change 0.0.0.0 to your LAN IP if you want
@@ -72,6 +75,9 @@ addrs = dnsSocket.addr[2..-1].uniq
 puts "*** DNS listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
 
 R =  Resolv::DNS.new
+
+# UDP Socket does per packet reverse lookups unless this is set.
+UDPSocket.do_not_reverse_lookup = true
 
 # abort on exceptions, otherwise threads will be silently killed in case
 # of unhandled exceptions
