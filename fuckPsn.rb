@@ -123,6 +123,8 @@ def connThread(local)
 	port, name = local.peeraddr[1..2]
 	puts "*** receiving from #{name}:#{port}"
 
+	puts local.gets
+
 	local.write("HTTP/1.1 200/OK\r\nContent-Type: text/plain\r\nContent-Length: #{@list_str.size}\r\n\r\n#{@list_str}")
 	local.close
 
