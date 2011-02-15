@@ -13,20 +13,32 @@ require 'openssl'
 
 require 'rubydns'
 
+# Ocra is the .exe generator
+defined?(Ocra) and exit
+
+Dir.chdir File.dirname($0)
+
+# Change 0.0.0.0 to your LAN IP if you want
+localHost = "0.0.0.0"
+
+# You don't need to edit below this comment!!
+puts "fuckPSN v0.4 by drizzt <drizzt@ibeglab.org>"
+
+# Listening ports
+localSslPort = 443
+localWebPort = 80
+localDnsPort = 53
+
+# PSN (auth.np.ac.playstation.net) IP address
 $remoteHost = "199.108.4.73"
 $remotePort = 443
 
-puts "fuckPSN v0.4 by drizzt <drizzt@ibeglab.org>"
-puts "target address: #{$remoteHost}:#{$remotePort}"
-
-localHost = "0.0.0.0"
-localPort = 443
-
 $blockSize = 1024
 
-cert_file = "cert.pem"
-key_file = "cert.key"
-list_file ="ps3-updatelist.txt"
+# Initialize OpenSSL library
+cert_file = File.join("data", "cert.pem")
+key_file = File.join("data", "cert.key")
+list_file = File.join("data", "ps3-updatelist.txt")
 
 cert = OpenSSL::X509::Certificate.new(File::read(cert_file))
 key = OpenSSL::PKey::RSA.new(File::read(key_file))
@@ -36,16 +48,17 @@ key = OpenSSL::PKey::RSA.new(File::read(key_file))
 @ctx.key = key
 @ctx.cert = cert
 
-server = TCPServer.new(localHost, localPort)
-webServer = TCPServer.new(localHost, 80)
-
+# Start servers
+sslServer = TCPServer.new(localHost, localSslPort)
+webServer = TCPServer.new(localHost, localWebPort)
 dnsSocket = UDPSocket.new(Socket::AF_INET)
-dnsSocket.bind(localHost, 53)
-R =  Resolv::DNS.new
+dnsSocket.bind(localHost, localDnsPort)
 
-port = server.addr[1]
-addrs = server.addr[2..-1].uniq
+# Some prints
+port = sslServer.addr[1]
+addrs = sslServer.addr[2..-1].uniq
 
+puts "target address: #{$remoteHost}:#{$remotePort}"
 puts "*** HTTPS listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
 
 port = webServer.addr[1]
@@ -58,6 +71,7 @@ addrs = dnsSocket.addr[2..-1].uniq
 
 puts "*** DNS listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
 
+R =  Resolv::DNS.new
 
 # abort on exceptions, otherwise threads will be silently killed in case
 # of unhandled exceptions
@@ -67,8 +81,10 @@ puts "*** DNS listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
 # (although Ctrl-Break always works)
 #Thread.new { loop { sleep 1 } }
 
+# Thread used for DNS connections
 def dnsConnThread(local)
 	packet, sender = local.recvfrom(1024*5)
+	puts "*** [DNS] receiving from #{sender.last}:#{sender[1]}"
 	myIp = UDPSocket.open {|s| s.connect(sender.last, 1); s.addr.last }
 	RubyDNS::Server.new do |server|
 		server.logger.level = Logger::INFO
@@ -91,20 +107,23 @@ def dnsConnThread(local)
 			local.send(result, 0, sender[2], sender[1])
 		end
 	end
+	puts "*** [DNS] done with #{sender.last}:#{sender[1]}"
 end
 
-def connThread(local)
+# Thread used for HTTP connections
+def webConnThread(local)
 	port, name = local.peeraddr[1..2]
-	puts "*** receiving from #{name}:#{port}"
+	puts "*** [WEB] receiving from #{name}:#{port}"
 
 	puts local.gets
 
 	local.write("HTTP/1.1 200/OK\r\nContent-Type: text/plain\r\nContent-Length: #{@list_str.size}\r\n\r\n#{@list_str}")
 	local.close
 
-	puts "*** done with #{name}:#{port}"
+	puts "*** [WEB] done with #{name}:#{port}"
 end
 
+# Thread used for HTTPS connections
 def sslConnThread(local)
 	port, name = local.peeraddr[1..2]
 	puts "*** [SSL] receiving from #{name}:#{port}"
@@ -156,20 +175,18 @@ def sslConnThread(local)
 	puts "*** [SSL] done with #{name}:#{port}"
 end
 
-if not defined?(Ocra)
-	loop do
-		# whenever server.accept returns a new connection, start
-		# a handler thread for that connection
-		ready = select([server, webServer, dnsSocket], nil, nil)
-		if ready[0].include? server
-			Thread.start(server.accept) { |local| sslConnThread(local) }
-		end
-		if ready[0].include? webServer
-			Thread.start(webServer.accept) { |local| connThread(local) }
-		end
-		if ready[0].include? dnsSocket
-			Thread.start(dnsSocket) { |local| dnsConnThread(local) }
-		end
+loop do
+	# whenever server.accept returns a new connection, start
+	# a handler thread for that connection
+	ready = select([sslServer, webServer, dnsSocket], nil, nil)
+	if ready[0].include? sslServer
+		Thread.start(sslServer.accept) { |local| sslConnThread(local) }
+	end
+	if ready[0].include? webServer
+		Thread.start(webServer.accept) { |local| webConnThread(local) }
+	end
+	if ready[0].include? dnsSocket
+		Thread.start(dnsSocket) { |local| dnsConnThread(local) }
 	end
 end
 
