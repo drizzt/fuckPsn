@@ -24,76 +24,13 @@ localPort = 443
 
 $blockSize = 1024
 
-cert_str = "-----BEGIN CERTIFICATE-----
-MIICqjCCAhOgAwIBAgIBATANBgkqhkiG9w0BAQUFADBhMQswCQYDVQQGEwJJVDER
-MA8GA1UECAwIVGVycm9uaWExITAfBgNVBAoMGFRoZSBCZXN0IENBIGluIHRoZSB3
-b3JsZDEcMBoGA1UEAwwTc3V4LnBsYXlzdGF0aW9uLm5ldDAeFw0xMTAyMTIxMjIx
-MDNaFw0xMjAyMTIxMjIxMDNaMFgxCzAJBgNVBAYTAklUMREwDwYDVQQIDAhUZXJy
-b25pYTERMA8GA1UECgwIU3RlYWwgbWUxIzAhBgNVBAMMGmF1dGgubnAuYWMucGxh
-eXN0YXRpb24ubmV0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDeaCWUD+YV
-CMt8SelBscJndsib6Xhzd3kDP4lHydkCiIvoVq5YLMmKPkAH5WFCVJUMIDzkwFLX
-EIb897hrFcP44eejcS22TP3I4PfQfTMcHBJjyzbbPkrL84Uhnwm7w8Tr2QbKzEie
-YXDRrUDJKPvLS7pI3pircYIhpNNh9JKZOQIDAQABo3sweTAJBgNVHRMEAjAAMCwG
-CWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNV
-HQ4EFgQUTrI+noNYNyq6SW9tPiOMwW0qcOUwHwYDVR0jBBgwFoAU3F6SP7pK/OXO
-WPBZOluGVUb4EOcwDQYJKoZIhvcNAQEFBQADgYEAsOCS11P2ngyn4YqigZedyiAL
-5tZnIibJ90nTrmQ++HybBj9JQA3aM1CEx+F8xRlcEnCR3jLLXgf3E1fM3s2Do6es
-iEyfqMtBrMcuoNNqzwSk3wgTYNS3NDkVczRVwpMS0Nn6OIBW+2XkloQ/qUlJ9+yM
-K1CQNuCkJc9ZPpETC+M=
------END CERTIFICATE-----"
+cert_file = "cert.pem"
+key_file = "cert.key"
+list_file ="ps3-updatelist.txt"
 
-key_str = "-----BEGIN PRIVATE KEY-----
-MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAN5oJZQP5hUIy3xJ
-6UGxwmd2yJvpeHN3eQM/iUfJ2QKIi+hWrlgsyYo+QAflYUJUlQwgPOTAUtcQhvz3
-uGsVw/jh56NxLbZM/cjg99B9MxwcEmPLNts+SsvzhSGfCbvDxOvZBsrMSJ5hcNGt
-QMko+8tLukjemKtxgiGk02H0kpk5AgMBAAECgYEA2qPRxXO3wZfqyt2yNIX20lXA
-sx1a71BVI69TWsKA1u+7coW8USx+WKwHsHt8GIQkHk6W7l5vUcOKoKc6ofM8udrU
-OxDnZ0xEKjFWSITWdR42pGr/qSRpxWHeuGRn9tCEL8DOXNHiAglHxRQpFybZKciI
-PHH3lQu1y7ndzYGdTIECQQDxdais6+GFY+xWhrPfW2ANCHny61igOLNkeM9Eizfm
-GhVmvqaUQo79i/qvoFVU/xYwdroqqqyIIJ1ljO77VTUJAkEA68zFLftdUGcG3UmG
-RGdODdLj2a90cJQb/EBKOCFKzPqKdBXWrd/DkidvHrmqvvRG9GMfd9q4ZZ3eQYi0
-oDr+sQJAYgOb283Idugv6JO3ckRaQhAdyJDmIevCTleH80/7+ei+pT1gyzAVcTCg
-KyiPWvhNHpEjUuyDKqLqoW1LGTTmWQJBAKo1fuPpPXuLUxYrO6Nm2p357AU3tJqL
-HwRgN/L6fS8nbwfKt9N84YQ/uON57Hm4hPtmDdILbO3VHhk6IABFdZECQHbC8Dvb
-tfj5htbU+aGKykoAQGVBBdPVcSrl9ZzTsvC7yHJ1pPrID3Zy8cVNtDa7k43wEnXw
-Kln4xhBcsEKap/0=
------END PRIVATE KEY-----"
-
-@list_str = "Dest=83;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=83;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;
-
-Dest=84;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=84;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;
-
-Dest=85;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=85;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;
-
-Dest=86;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=86;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;
-
-Dest=87;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=87;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;
-
-Dest=88;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=88;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;
-
-Dest=89;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=89;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;
-
-Dest=8A;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=8A;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;
-
-Dest=8B;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=8B;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;
-
-Dest=8C;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=8C;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;
-
-Dest=8D;CompatibleSystemSoftwareVersion=3.2100-;
-Dest=8D;ImageVersion=00000000;SystemSoftwareVersion=3.2100;CDN=http://lolz.com;CDN_Timeout=30;"
-
-cert = OpenSSL::X509::Certificate.new(cert_str) # (File::read(cert_file))
-key = OpenSSL::PKey::RSA.new(key_str)  #(File::read(key_file))
+cert = OpenSSL::X509::Certificate.new(File::read(cert_file))
+key = OpenSSL::PKey::RSA.new(File::read(key_file))
+@list_str = File::read(list_file)
 
 @ctx = OpenSSL::SSL::SSLContext.new()
 @ctx.key = key
