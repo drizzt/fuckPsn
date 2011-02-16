@@ -13,6 +13,7 @@ require 'rubygems'
 require 'socket'
 require 'openssl'
 
+require 'rainbow'
 require 'rubydns'
 
 # Ocra is the .exe generator
@@ -25,7 +26,7 @@ Dir.chdir File.dirname($0)
 localHost = "0.0.0.0"
 
 # You don't need to edit below this comment!!
-puts "fuckPSN v0.5 by drizzt <drizzt@ibeglab.org> -- http://3.ly/fuckPSN"
+puts "fuckPSN v0.5".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "http://3.ly/fuckPSN".color(:blue)
 
 # Listening ports
 localSslPort = 443
@@ -61,18 +62,18 @@ dnsSocket.bind(localHost, localDnsPort)
 port = sslServer.addr[1]
 addrs = sslServer.addr[2..-1].uniq
 
-puts "target address: #{$remoteHost}:#{$remotePort}"
-puts "*** HTTPS listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
+puts "target address: #{$remoteHost}:#{$remotePort}".color(:yellow)
+puts "*** ".color(:green) + "HTTPS listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
 
 port = webServer.addr[1]
 addrs = webServer.addr[2..-1].uniq
 
-puts "*** HTTP listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
+puts "*** ".color(:green) + "HTTP listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
 
 port = dnsSocket.addr[1]
 addrs = dnsSocket.addr[2..-1].uniq
 
-puts "*** DNS listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
+puts "*** ".color(:green) + "DNS listening on #{addrs.collect{|a|"#{a}:#{port}" }.join(' ')}"
 
 R =  Resolv::DNS.new
 
@@ -90,7 +91,7 @@ UDPSocket.do_not_reverse_lookup = true
 # Thread used for DNS connections
 def dnsConnThread(local)
 	packet, sender = local.recvfrom(1024*5)
-	puts "*** [DNS] receiving from #{sender.last}:#{sender[1]}"
+	puts "*** ".color(:green) + "[DNS]".color(:red) + " receiving from #{sender.last}:#{sender[1]}"
 	myIp = UDPSocket.open {|s| s.connect(sender.last, 1); s.addr.last }
 	RubyDNS::Server.new do |server|
 		server.logger.level = Logger::INFO
@@ -113,26 +114,26 @@ def dnsConnThread(local)
 			local.send(result, 0, sender[2], sender[1])
 		end
 	end
-	puts "*** [DNS] done with #{sender.last}:#{sender[1]}"
+	puts "*** ".color(:green) + "[DNS]".color(:red) + " done with #{sender.last}:#{sender[1]}"
 end
 
 # Thread used for HTTP connections
 def webConnThread(local)
 	port, name = local.peeraddr[1..2]
-	puts "*** [WEB] receiving from #{name}:#{port}"
+	puts "*** ".color(:green) + "[WEB]".color(:blue) + " receiving from #{name}:#{port}"
 
 	puts local.gets
 
 	local.write("HTTP/1.1 200/OK\r\nContent-Type: text/plain\r\nContent-Length: #{@list_str.size}\r\n\r\n#{@list_str}")
 	local.close
 
-	puts "*** [WEB] done with #{name}:#{port}"
+	puts "*** ".color(:green) + "[WEB]".color(:blue) + " done with #{name}:#{port}"
 end
 
 # Thread used for HTTPS connections
 def sslConnThread(local)
 	port, name = local.peeraddr[1..2]
-	puts "*** [SSL] receiving from #{name}:#{port}"
+	puts "*** ".color(:green) + "[SSL]".color(:yellow) + " receiving from #{name}:#{port}"
 
 	sslLocal = OpenSSL::SSL::SSLSocket.new(local, @ctx)
 	sslLocal.accept
@@ -155,7 +156,7 @@ def sslConnThread(local)
 			begin
 				data = sslLocal.sysread($blockSize)
 			rescue EOFError
-				puts "local end closed connection"
+				puts "local end closed connection".color(:red)
 				break
 			end
 			if data.match('X-Platform-Passphrase: ')
@@ -170,7 +171,7 @@ def sslConnThread(local)
 			begin
 				data = sslRemote.sysread($blockSize)
 			rescue EOFError
-				puts "remote end closed connection"
+				puts "remote end closed connection".color(:red)
 				break
 			end
 			sslLocal.write(data)
@@ -182,7 +183,7 @@ def sslConnThread(local)
 	sslRemote.close
 	remote.close
 
-	puts "*** [SSL] done with #{name}:#{port}"
+	puts "*** ".color(:green) + "[SSL]".color(:yellow) + " done with #{name}:#{port}"
 end
 
 loop do
