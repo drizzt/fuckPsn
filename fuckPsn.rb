@@ -25,7 +25,7 @@ Dir.chdir File.dirname($0)
 localHost = "0.0.0.0"
 
 # You don't need to edit below this comment!!
-puts "fuckPSN v0.4 by drizzt <drizzt@ibeglab.org>"
+puts "fuckPSN v0.5 by drizzt <drizzt@ibeglab.org> -- http://3.ly/fuckPSN"
 
 # Listening ports
 localSslPort = 443
