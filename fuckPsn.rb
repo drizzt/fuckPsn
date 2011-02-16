@@ -158,8 +158,12 @@ def sslConnThread(local)
 				puts "local end closed connection"
 				break
 			end
-
-			sslRemote.write(data.sub('X-Platform-Version: PS3 03.55', 'X-Platform-Version: PS3 03.56'))
+			if data.match('X-Platform-Passphrase: ')
+				data.sub!(/^X-Platform-Version: PS3 .*/, 'X-Platform-Version: PS3 03.56')
+			else
+				data.sub!(/^X-Platform-Version: PS3 .*/, "X-Platform-Passphrase: saktdlMapxsbsghmq5dhlwrmtsicyijmzntqaLcpgd8ybbetdmsha=jm\r\nX-Platform-Version: PS3 03.56")
+			end
+			sslRemote.write(data)
 		end
 		if ready[0].include? sslRemote
 			# remote -> local
