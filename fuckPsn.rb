@@ -26,7 +26,7 @@ Dir.chdir File.dirname($0)
 localHost = "0.0.0.0"
 
 # You don't need to edit below this comment!!
-puts "fuckPSN v0.5".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "http://3.ly/fuckPSN".color(:blue)
+puts "fuckPSN v0.6".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "http://3.ly/fuckPSN".color(:blue)
 
 # Listening ports
 localSslPort = 443
@@ -62,18 +62,18 @@ dnsSocket.bind(localHost, localDnsPort)
 port = sslServer.addr[1]
 addrs = sslServer.addr[2..-1].uniq
 
-puts "target address: #{$remoteHost}:#{$remotePort}".color(:yellow)
-puts "*** ".color(:green) + "HTTPS listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
+puts "Target Address: ".color(:green) + "#{$remoteHost}:#{$remotePort} - auth.np.ac.playstation.net".color(:yellow)
+puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " [SSL]".color(:red) + " listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}".color(:green)
 
 port = webServer.addr[1]
 addrs = webServer.addr[2..-1].uniq
 
-puts "*** ".color(:green) + "HTTP listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
+puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " [WEB]".color(:red) + " listening on #{addrs.collect{|a|"#{a}:#{port}"}.join(' ')}".color(:green)
 
 port = dnsSocket.addr[1]
 addrs = dnsSocket.addr[2..-1].uniq
 
-puts "*** ".color(:green) + "DNS listening on #{addrs.collect{|a|"#{a}:#{port}" }.join(' ')}"
+puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " [DNS]".color(:red) + " listening on #{addrs.collect{|a|"#{a}:#{port}" }.join(' ')}".color(:green)
 
 R =  Resolv::DNS.new
 
@@ -91,7 +91,7 @@ UDPSocket.do_not_reverse_lookup = true
 # Thread used for DNS connections
 def dnsConnThread(local)
 	packet, sender = local.recvfrom(1024*5)
-	puts "*** ".color(:green) + "[DNS]".color(:red) + " receiving from #{sender.last}:#{sender[1]}"
+	puts "*** ".color(:green) + "[DNS]".color(:red) + " receiving from #{sender.last}:#{sender[1]}".color(:green)
 	myIp = UDPSocket.open {|s| s.connect(sender.last, 1); s.addr.last }
 	RubyDNS::Server.new do |server|
 		server.logger.level = Logger::INFO
@@ -114,26 +114,26 @@ def dnsConnThread(local)
 			local.send(result, 0, sender[2], sender[1])
 		end
 	end
-	puts "*** ".color(:green) + "[DNS]".color(:red) + " done with #{sender.last}:#{sender[1]}"
+	puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " [DNS]".color(:red) + " done with #{sender.last}:#{sender[1]}".color(:green)
 end
 
 # Thread used for HTTP connections
 def webConnThread(local)
 	port, name = local.peeraddr[1..2]
-	puts "*** ".color(:green) + "[WEB]".color(:blue) + " receiving from #{name}:#{port}"
+	puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " [WEB]".color(:blue) + " receiving from #{name}:#{port}".color(:green)
 
-	puts local.gets
+	puts "[#{Time.new}] ".color(:blue) + local.gets.color(:yellow)
 
-	local.write("HTTP/1.1 200/OK\r\nContent-Type: text/plain\r\nContent-Length: #{@list_str.size}\r\n\r\n#{@list_str}")
+	local.write("HTTP/1.1 200/OK\r\nContent-Type: text/plain\r\nContent-Length: #{@list_str.size}\r\n\r\n#{@list_str}").color(:green)
 	local.close
 
-	puts "*** ".color(:green) + "[WEB]".color(:blue) + " done with #{name}:#{port}"
+	puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " [WEB]".color(:blue) + " done with #{name}:#{port}".color(:green)
 end
 
 # Thread used for HTTPS connections
 def sslConnThread(local)
 	port, name = local.peeraddr[1..2]
-	puts "*** ".color(:green) + "[SSL]".color(:yellow) + " receiving from #{name}:#{port}"
+	puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " [SSL]".color(:yellow) + " receiving from #{name}:#{port}".color(:green)
 
 	sslLocal = OpenSSL::SSL::SSLSocket.new(local, @ctx)
 	sslLocal.accept
@@ -148,7 +148,7 @@ def sslConnThread(local)
 	loop do
 		ready = select([sslLocal, sslRemote], nil, nil, 120)
 		if ready.nil?
-			puts "timeout"
+			puts "[#{Time.new}]".color(:blue) + " timeout".color(:red)
 			break
 		end
 		if ready[0].include? sslLocal
@@ -156,8 +156,13 @@ def sslConnThread(local)
 			begin
 				data = sslLocal.sysread($blockSize)
 			rescue EOFError
-				puts "local end closed connection".color(:red)
+				puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " local end closed connection".color(:red)
 				break
+			end
+			
+			if data.match('consoleid')
+				data.sub!(/^consoleid=.*/, 'consoleid=')
+				puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " Spoofed consoleid".color(:red)
 			end
 			if data.match('X-Platform-Passphrase: ')
 				data.sub!(/^X-Platform-Version: PS3 .*/, 'X-Platform-Version: PS3 03.56')
@@ -171,7 +176,7 @@ def sslConnThread(local)
 			begin
 				data = sslRemote.sysread($blockSize)
 			rescue EOFError
-				puts "remote end closed connection".color(:red)
+				puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " remote end closed connection".color(:red)
 				break
 			end
 			sslLocal.write(data)
@@ -183,7 +188,7 @@ def sslConnThread(local)
 	sslRemote.close
 	remote.close
 
-	puts "*** ".color(:green) + "[SSL]".color(:yellow) + " done with #{name}:#{port}"
+	puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " [SSL]".color(:yellow) + " done with #{name}:#{port}".color(:green)
 end
 
 loop do
