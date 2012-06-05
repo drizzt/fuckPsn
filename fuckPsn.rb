@@ -17,7 +17,10 @@ require 'rainbow'
 require 'rubydns'
 
 # Ocra is the .exe generator
-defined?(Ocra) and exit
+if defined?(Ocra)
+	require 'rexec/client'
+	exit
+end
 
 # Enter in current directory
 Dir.chdir File.dirname($0)
@@ -26,7 +29,7 @@ Dir.chdir File.dirname($0)
 localHost = "0.0.0.0"
 
 # You don't need to edit below this comment!!
-puts "fuckPSN v0.6".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "http://gitorious.org/fuckpsn/pages/Home".color(:blue)
+puts "fuckPSN v0.7".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "http://gitorious.org/fuckpsn/pages/Home".color(:blue)
 
 # Listening ports
 localSslPort = 443
