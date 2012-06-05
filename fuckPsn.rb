@@ -34,7 +34,7 @@ localWebPort = 80
 localDnsPort = 53
 
 # PSN (auth.np.ac.playstation.net) IP address
-$remoteHost = "199.108.4.73"
+$remoteHost = "173.230.216.161"
 $remotePort = 443
 
 $blockSize = 1024
@@ -159,16 +159,13 @@ def sslConnThread(local)
 				puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " local end closed connection".color(:red)
 				break
 			end
-			
+
 			if data.match('consoleid')
 				data.sub!(/consoleid=.*/, '00000000000000000000000000000000000000000000000000000000000000000000000000')
 				puts "*** ".color(:green) + "[#{Time.new}]".color(:blue) + " Spoofed consoleid".color(:red)
 			end
-			if data.match('X-Platform-Passphrase: ')
-				data.sub!(/^X-Platform-Version: PS3 .*/, 'X-Platform-Version: PS3 03.56')
-			else
-				data.sub!(/^X-Platform-Version: PS3 .*/, "X-Platform-Passphrase: saktdlMapxsbsghmq5dhlwrmtsicyijmzntqaLcpgd8ybbetdmsha=jm\r\nX-Platform-Version: PS3 03.56")
-			end
+			data.sub!(/^X-Platform-Passphrase: .*/, 'X-Platform-Passphrase: 0e444f4dbd92145de39ab5bff3a23071f9d44db7bcf13e8c455c81f1')
+			data.sub!(/^X-Platform-Version: PS3 .*/, 'X-Platform-Version: PS3 04.11')
 			sslRemote.write(data)
 		end
 		if ready[0].include? sslRemote
