@@ -3,7 +3,7 @@ fuckPsn 0.7 by [drizzt@ibeglab.org](mailto:drizzt@ibeglab.org)
 
 ## Prerequisites
 
-* CA27.cer, dev\_blind.pkg, fuckPsn-v0.7.exe from [here](https://github.com/drizztbsd/fuckPsn/downloads)
+* CA27.cer, dev\_blind.pkg, fuckPsn-v0.7b.exe from [here](https://github.com/drizztbsd/fuckPsn/downloads)
 * OpenPS3FTP v1.3 or later, you can download 1.5 from [here](http://psx-scene.com/forums/attachments/f149/26137d1299287039-openps3ftp-v1-2-openps3ftp-v1-5-zip)
 
 ## ChangeLog
@@ -47,8 +47,9 @@ If you like my work please [![Donate](https://www.paypal.com/en_GB/i/btn/btn_don
 
 1. Download [source code](https://github.com/drizztbsd/fuckPsn)
 2. Install required gems with `gem install rubydns rainbow`
-3. Launch fuckPsn: `sudo ./fuckPsn.rb`
-4. Enjoy
+3. [Workaround] If you are using Ruby 1.9.3 you need to use a fixed RubyDNS version with `wget https://github.com/downloads/drizztbsd/fuckPsn/rubydns-0.3.4+ruby1.9.3.gem && gem install rubydns-0.3.4+ruby1.9.3.gem`
+4. Launch fuckPsn: `sudo ./fuckPsn.rb`
+5. Enjoy
 
 
 ## DEVELOPERS SECTION
@@ -58,5 +59,6 @@ If you like my work please [![Donate](https://www.paypal.com/en_GB/i/btn/btn_don
 1. Install [Ruby for Windows](http://rubyinstaller.org/)
 2. Install eventmachine beta `gem install eventmachine --pre`
 3. Install required gems by opening the "Ruby Command Line" and typing `gem install ocra rainbow rubydns windows-pr win32console`
-4. Launch: `ocra --icon fuckPsn.ico fuckPsn.rb data\*`
-5. You will have _fuckPsn.exe_ file
+4. [Workaround] If you are using Ruby 1.9.3 you need to use a fixed RubyDNS version, so download https://github.com/downloads/drizztbsd/fuckPsn/rubydns-0.3.4+ruby1.9.3.gem and install it by typing `gem install rubydns-0.3.4+ruby1.9.3.gem`
+5. Launch: `ocra --icon fuckPsn.ico fuckPsn.rb data\*`
+6. You will have _fuckPsn.exe_ file
