@@ -80,6 +80,13 @@ puts "*** ".color(:green) + "[#{Time.new}]".color(:cyan) + " [DNS]".color(:red) 
 
 R =  Resolv::DNS.new
 
+# FIXME Remove that horrible workaround for RubyDNS under Ruby 1.9.3 as soon new RubyDNS release will be out
+unless defined?(R.make_requester)
+	class Resolv::DNS
+		alias make_requester make_udp_requester
+	end
+end
+
 # UDP Socket does per packet reverse lookups unless this is set.
 UDPSocket.do_not_reverse_lookup = true
 
