@@ -11,4 +11,5 @@ wget -qO- https://github.com/drizztbsd/fuckPsn/tarball/master | tar --strip-comp
 printf '#!/bin/sh\ncd /usr/local/share/fuckPsn && exec /usr/bin/sudo ./fuckPsn.rb "$@"' > /usr/local/sbin/fuckPsn
 chmod 0755 /usr/local/sbin/fuckPsn
 
-echo 'fuckPsn successfully installed!'
+version=`grep '^VERSION=' fuckPsn.rb | cut -f 2 -d '"'`
+echo "fuckPsn v$version successfully installed!"
