@@ -56,10 +56,26 @@ key = OpenSSL::PKey::RSA.new(File::read(key_file))
 @ctx.cert = cert
 
 # Start servers
-sslServer = TCPServer.new(localHost, localSslPort)
-webServer = TCPServer.new(localHost, localWebPort)
-dnsSocket = UDPSocket.new(Socket::AF_INET)
-dnsSocket.bind(localHost, localDnsPort)
+begin
+	sslServer = TCPServer.new(localHost, localSslPort)
+rescue Errno::EADDRINUSE
+	$stderr.puts "Error".color(:red) + " Port " + localSslPort.to_s + " already in use"
+end
+begin
+	webServer = TCPServer.new(localHost, localWebPort)
+rescue Errno::EADDRINUSE
+	$stderr.puts "Error".color(:red) + " Port " + localWebPort.to_s + " already in use"
+end
+begin
+	dnsSocket = UDPSocket.new(Socket::AF_INET)
+	dnsSocket.bind(localHost, localDnsPort)
+rescue Errno::EADDRINUSE
+	$stderr.puts "Error".color(:red) + " Port " + localDnsPort.to_s + " already in use"
+end
+
+if sslServer.nil? or webServer.nil? or dnsSocket.nil?
+	exit 1
+end
 
 # Some prints
 port = sslServer.addr[1]
