@@ -42,8 +42,17 @@ If you lost original cert, you can take it [here](https://github.com/downloads/d
 
 If you like my work please [![Donate](https://www.paypal.com/en_GB/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VGNL2G57YR6QJ)
 
+## Autoinstaller for Debian/Ubuntu
 
-## Using under Linux
+Prerequsites: You **need** to have sudo configured to install and use the auto installer (ubuntu has it by default)
+
+Open a terminal and launch the following command:
+
+	wget -qO- https://raw.github.com/drizztbsd/fuckPsn/master/autoinstaller_ubuntu.sh | sudo /bin/sh -
+
+Now you have _fuckPsn_ installed as `fuckPsn` command
+
+## Using under Linux (expert version)
 
 1. Download [source code](https://github.com/drizztbsd/fuckPsn)
 2. Install required gems with `gem install rubydns rainbow`
