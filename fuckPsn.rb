@@ -30,9 +30,11 @@ localHost = "0.0.0.0"
 
 # You don't need to edit below this comment!!
 
-VERSION="0.7"
+FUCKPSN_VERSION='0.7.1'
+PLATFORM_VERSION='04.11'
+PLATFORM_PASSPHRASE='0e444f4dbd92145de39ab5bff3a23071f9d44db7bcf13e8c455c81f1'
 
-puts "fuckPSN v#{VERSION}".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "https://github.com/drizztbsd/fuckPsn".color(:cyan)
+puts "fuckPSN v#{FUCKPSN_VERSION}".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "https://github.com/drizztbsd/fuckPsn".color(:cyan)
 
 # Listening ports
 localSslPort = 443
@@ -193,8 +195,12 @@ def sslConnThread(local)
 				data.sub!(/consoleid=.*/, '00000000000000000000000000000000000000000000000000000000000000000000000000')
 				puts "*** ".color(:green) + "[#{Time.new}]".color(:cyan) + " Spoofed consoleid".color(:red)
 			end
-			data.sub!(/^X-Platform-Passphrase: .*/, 'X-Platform-Passphrase: 0e444f4dbd92145de39ab5bff3a23071f9d44db7bcf13e8c455c81f1')
-			data.sub!(/^X-Platform-Version: PS3 .*/, 'X-Platform-Version: PS3 04.11')
+			if data.match('X-Platform-Passphrase: ')
+				data.sub!(/^X-Platform-Passphrase: .*/, 'X-Platform-Passphrase: ' + PLATFORM_PASSPHRASE)
+				data.sub!(/^X-Platform-Version: PS3 .*/, 'X-Platform-Version: PS3 ' + PLATFORM_VERSION)
+			else
+				data.sub!(/^X-Platform-Version: PS3 .*/, "X-Platform-Version: PS3 #{PLATFORM_VERSION}\r\nX-Platform-Passphrase: #{PLATFORM_PASSPHRASE}")
+			end
 			sslRemote.write(data)
 		end
 		if ready[0].include? sslRemote
