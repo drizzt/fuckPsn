@@ -14,6 +14,8 @@ require 'socket'
 require 'openssl'
 
 require 'rainbow'
+
+gem 'rubydns', '~> 0.4.0'
 require 'rubydns'
 
 # Ocra is the .exe generator
@@ -99,15 +101,6 @@ addrs = dnsSocket.addr[2..-1].uniq
 
 puts "*** ".color(:green) + "[#{Time.new}]".color(:cyan) + " [DNS]".color(:red) + " listening on #{addrs.collect{|a|"#{a}:#{port}" }.join(' ')}".color(:green)
 
-R =  Resolv::DNS.new
-
-# FIXME Remove that horrible workaround for RubyDNS under Ruby 1.9.3 as soon new RubyDNS release will be out
-unless defined?(R.make_requester)
-	class Resolv::DNS
-		alias make_requester make_udp_requester
-	end
-end
-
 # UDP Socket does per packet reverse lookups unless this is set.
 UDPSocket.do_not_reverse_lookup = true
 
@@ -119,6 +112,9 @@ UDPSocket.do_not_reverse_lookup = true
 # (although Ctrl-Break always works)
 #Thread.new { loop { sleep 1 } }
 
+R =  Resolv::DNS.new
+IN = Resolv::DNS::Resource::IN
+
 # Thread used for DNS connections
 def dnsConnThread(local)
 	packet, sender = local.recvfrom(1024*5)
@@ -127,12 +123,12 @@ def dnsConnThread(local)
 	RubyDNS::Server.new do |server|
 		server.logger.level = Logger::INFO
 		Thread.new do
-			match("auth.np.ac.playstation.net", :A) do |transaction|
+			match("auth.np.ac.playstation.net", IN::A) do |transaction|
 				logger.info("#{transaction} query received, returning #{myIp}")
 				transaction.respond!(myIp)
 			end
 
-			match(/ps3.update.playstation.net$/, :A) do |match_data, transaction|
+			match(/ps3.update.playstation.net$/, IN::A) do |match_data, transaction|
 				logger.info("#{transaction} query received, returning #{myIp}")
 				transaction.respond!(myIp)
 			end
@@ -141,8 +137,9 @@ def dnsConnThread(local)
 				transaction.passthrough!(R)
 			end
 
-			result = server.receive_data(packet)
-			local.send(result, 0, sender[2], sender[1])
+			RubyDNS::UDPHandler::process(server, packet) do |result|
+				local.send(result, 0, sender[2], sender[1])
+			end
 		end
 	end
 	puts "*** ".color(:green) + "[#{Time.new}]".color(:cyan) + " [DNS]".color(:red) + " done with #{sender.last}:#{sender[1]}".color(:green)
