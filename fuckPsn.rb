@@ -138,7 +138,7 @@ def dnsConnThread(local)
 			end
 
 			RubyDNS::UDPHandler::process(server, packet) do |result|
-				local.send(result, 0, sender[2], sender[1])
+				local.send(result.encode, 0, sender[2], sender[1])
 			end
 		end
 	end
