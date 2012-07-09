@@ -2,7 +2,7 @@
 
 set -e
 
-apt-get install rubygems ruby1.8-dev libopenssl-ruby1.8
+apt-get -y install rubygems ruby1.8-dev libopenssl-ruby1.8 g++
 gem install rubydns rainbow
 rm -rf /usr/local/share/fuckPsn
 mkdir -p /usr/local/share/fuckPsn
