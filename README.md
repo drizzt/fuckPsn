@@ -9,7 +9,7 @@ fuckPsn 0.9 by [drizzt@ibeglab.org](mailto:drizzt@ibeglab.org)
 ## ChangeLog
 
 **v0.9:** Add support for 4.21 spoofing  
-**v0.8:** Re-add support for firmwares older than 3.55
+**v0.8:** Re-add support for firmwares older than 3.55  
 **v0.7:** Add support for 4.11 spoofing  
 **v0.6:** Use an empty consoleid. **Warning:** be sure to get **my** 0.6 version  
 **v0.5:** Add support for firmwares older than 3.55  
