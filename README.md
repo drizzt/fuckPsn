@@ -1,13 +1,14 @@
-fuckPsn 0.8 by [drizzt@ibeglab.org](mailto:drizzt@ibeglab.org)
+fuckPsn 0.9 by [drizzt@ibeglab.org](mailto:drizzt@ibeglab.org)
 ==============================================================
 
 ## Prerequisites
 
-* CA27.cer, dev\_blind.pkg, fuckPsn-v0.8.exe from [here](https://github.com/drizztbsd/fuckPsn/downloads)
+* CA27.cer, dev\_blind.pkg, fuckPsn-v0.9.exe from [here](https://github.com/drizztbsd/fuckPsn/downloads)
 * OpenPS3FTP v1.3 or later, you can download 1.5 from [here](http://psx-scene.com/forums/attachments/f149/26137d1299287039-openps3ftp-v1-2-openps3ftp-v1-5-zip)
 
 ## ChangeLog
 
+**v0.9:** Add support for 4.21 spoofing  
 **v0.8:** Re-add support for firmwares older than 3.55
 **v0.7:** Add support for 4.11 spoofing  
 **v0.6:** Use an empty consoleid. **Warning:** be sure to get **my** 0.6 version  
