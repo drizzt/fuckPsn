@@ -32,9 +32,9 @@ localHost = "0.0.0.0"
 
 # You don't need to edit below this comment!!
 
-FUCKPSN_VERSION='0.8'
-PLATFORM_VERSION='04.11'
-PLATFORM_PASSPHRASE='0e444f4dbd92145de39ab5bff3a23071f9d44db7bcf13e8c455c81f1'
+FUCKPSN_VERSION='0.9'
+PLATFORM_VERSION='04.21'
+PLATFORM_PASSPHRASE='t2wSyoqasqb_wndpmdmbhputnokghlupgtpighyrsygfbmrsectfkqOb'
 
 puts "fuckPSN v#{FUCKPSN_VERSION}".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "https://github.com/drizztbsd/fuckPsn".color(:cyan)
 
