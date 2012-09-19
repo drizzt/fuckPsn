@@ -3,7 +3,7 @@ fuckPsn 0.9 by [drizzt@ibeglab.org](mailto:drizzt@ibeglab.org)
 
 ## Prerequisites
 
-* CA27.cer, dev\_blind.pkg, fuckPsn-v0.9.exe from [here](https://github.com/drizztbsd/fuckPsn/downloads)
+* CA27.cer, dev\_blind.pkg, fuckPsn-v0.9.exe from [here](https://github.com/drizzt/fuckPsn/downloads)
 * OpenPS3FTP v1.3 or later, you can download 1.5 from [here](http://psx-scene.com/forums/attachments/f149/26137d1299287039-openps3ftp-v1-2-openps3ftp-v1-5-zip)
 
 ## ChangeLog
@@ -33,7 +33,7 @@ fuckPsn 0.9 by [drizzt@ibeglab.org](mailto:drizzt@ibeglab.org)
 
 If you have followed the OLD guide you need to rename the original `CA27.cer` to `CA27.cer.bak` and (my) `CA24.cer` to `CA27.cer` and you have to restore the old `CA24.cer`, by renaming `CA24.cer.bak` to `CA24.cer`  
 This is needed since some games use the original `CA24.cer`  
-If you lost original cert, you can take it [here](https://github.com/downloads/drizztbsd/fuckPsn/OriginalCerts.zip)
+If you lost original cert, you can take it [here](https://github.com/downloads/drizzt/fuckPsn/OriginalCerts.zip)
 
 ## FAQs
 
@@ -50,13 +50,13 @@ Prerequsites: You **need** to have sudo configured to install and use the auto i
 
 Open a terminal and launch the following command:
 
-	wget -qO- https://raw.github.com/drizztbsd/fuckPsn/master/autoinstaller_ubuntu.sh | sudo /bin/sh -
+	wget -qO- https://raw.github.com/drizzt/fuckPsn/master/autoinstaller_ubuntu.sh | sudo /bin/sh -
 
 Now you have _fuckPsn_ installed as `fuckPsn` command
 
 ## Using under Linux (expert version)
 
-1. Download [source code](https://github.com/drizztbsd/fuckPsn)
+1. Download [source code](https://github.com/drizzt/fuckPsn)
 2. Install required gems with `gem install rubydns rainbow`
 3. Launch fuckPsn: `sudo ./fuckPsn.rb`
 4. Enjoy
