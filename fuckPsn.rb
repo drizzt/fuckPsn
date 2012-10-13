@@ -34,7 +34,7 @@ localHost = "0.0.0.0"
 
 FUCKPSN_VERSION='0.9'
 PLATFORM_VERSION='04.21'
-PLATFORM_PASSPHRASE='t2wSyoqasqb_wndpmdmbhputnokghlupgtpighyrsygfbmrsectfkqOb'
+PLATFORM_PASSPHRASE='zvci2hj3ccctzRxtZwbgarlroxtdhcoyotfywlzkbzjbzfz>azsjtuie'
 
 puts "fuckPSN v#{FUCKPSN_VERSION}".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "https://github.com/drizztbsd/fuckPsn".color(:cyan)
 
@@ -194,9 +194,9 @@ def sslConnThread(local)
 			end
 			if data.match('X-Platform-Passphrase: ')
 				data.sub!(/^X-Platform-Passphrase: .*/, 'X-Platform-Passphrase: ' + PLATFORM_PASSPHRASE)
-				data.sub!(/^X-Platform-Version: PS3 .*/, 'X-Platform-Version: PS3 ' + PLATFORM_VERSION)
+				data.sub!(/^X-Platform-Version: PS3 .*/, 'X-Platform-Version: PS3_C ' + PLATFORM_VERSION)
 			else
-				data.sub!(/^X-Platform-Version: PS3 .*/, "X-Platform-Version: PS3 #{PLATFORM_VERSION}\r\nX-Platform-Passphrase: #{PLATFORM_PASSPHRASE}")
+				data.sub!(/^X-Platform-Version: PS3 .*/, "X-Platform-Version: PS3_C #{PLATFORM_VERSION}\r\nX-Platform-Passphrase: #{PLATFORM_PASSPHRASE}")
 			end
 			sslRemote.write(data)
 		end
