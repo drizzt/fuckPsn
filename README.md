@@ -1,4 +1,4 @@
-fuckPsn 0.9 by [drizzt@ibeglab.org](mailto:drizzt@ibeglab.org)
+fuckPsn 1.0 by [drizzt@ibeglab.org](mailto:drizzt@ibeglab.org)
 ==============================================================
 
 ## Prerequisites
@@ -8,6 +8,7 @@ fuckPsn 0.9 by [drizzt@ibeglab.org](mailto:drizzt@ibeglab.org)
 
 ## ChangeLog
 
+**v1.0:** Fix spoofing (Thanks flys out to BigFAN from psjailbreak.ru and Asure from ps3hax for the informations.)  
 **v0.9:** Add support for 4.21 spoofing  
 **v0.8:** Re-add support for firmwares older than 3.55  
 **v0.7:** Add support for 4.11 spoofing  
