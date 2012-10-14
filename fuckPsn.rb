@@ -32,11 +32,11 @@ localHost = "0.0.0.0"
 
 # You don't need to edit below this comment!!
 
-FUCKPSN_VERSION='0.9'
+FUCKPSN_VERSION='1.0'
 PLATFORM_VERSION='04.21'
 PLATFORM_PASSPHRASE='zvci2hj3ccctzRxtZwbgarlroxtdhcoyotfywlzkbzjbzfz>azsjtuie'
 
-puts "fuckPSN v#{FUCKPSN_VERSION}".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "https://github.com/drizztbsd/fuckPsn".color(:cyan)
+puts "fuckPSN v#{FUCKPSN_VERSION}".color(:green) + " by drizzt <drizzt@ibeglab.org> ".color(:red) + "-- ".color(:cyan) + "https://github.com/drizzt/fuckPsn".color(:cyan)
 
 # Listening ports
 localSslPort = 443
