@@ -189,7 +189,7 @@ def sslConnThread(local)
 			end
 
 			if data.match('consoleid')
-				data.sub!(/consoleid=.*/, '00000000000000000000000000000000000000000000000000000000000000000000000000')
+				data.sub!(/consoleid=.*/, '00000000000000000000000000000000000000000000000000000000000000000000000001')
 				puts "*** ".color(:green) + "[#{Time.new}]".color(:cyan) + " Spoofed consoleid".color(:red)
 			end
 			if data.match('X-Platform-Passphrase: ')
